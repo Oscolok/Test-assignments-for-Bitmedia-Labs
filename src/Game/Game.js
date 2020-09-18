@@ -5,8 +5,8 @@ import { IonPhaser } from "@ion-phaser/react";
 const GameScene = () => {
   const game = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 560,
+    width: 640,
+    height: 480,
     backgroundColor: "#333",
     canvasStyle: "display: block; margin: 0 auto;",
     scene: {
@@ -39,7 +39,6 @@ const GameScene = () => {
 
         this.setTexture("coin");
         this.setPosition(x * 16, y * 16);
-        this.setScale(1.3);
         this.setOrigin(0);
 
         this.total = 0;
@@ -48,12 +47,7 @@ const GameScene = () => {
       },
 
       eat: function () {
-        this.total++;
-
-        const x = Phaser.Math.Between(0, 39);
-        const y = Phaser.Math.Between(0, 29);
-
-        this.setPosition(x * 16, y * 16);
+        this.total = this.total + 5;
       },
     });
 
@@ -64,6 +58,7 @@ const GameScene = () => {
         this.body = scene.add.group();
 
         this.head = this.body.create(x * 16, y * 16, "player");
+        this.head.setScale(0.7);
         this.head.setOrigin(0);
 
         this.alive = true;
@@ -114,7 +109,7 @@ const GameScene = () => {
             this.headPosition.x = Phaser.Math.Wrap(
               this.headPosition.x - 1,
               0,
-              50
+              40
             );
             break;
 
@@ -122,7 +117,7 @@ const GameScene = () => {
             this.headPosition.x = Phaser.Math.Wrap(
               this.headPosition.x + 1,
               0,
-              50
+              40
             );
             break;
 
@@ -130,7 +125,7 @@ const GameScene = () => {
             this.headPosition.y = Phaser.Math.Wrap(
               this.headPosition.y - 1,
               0,
-              35
+              30
             );
             break;
 
@@ -138,7 +133,7 @@ const GameScene = () => {
             this.headPosition.y = Phaser.Math.Wrap(
               this.headPosition.y + 1,
               0,
-              35
+              30
             );
             break;
 
@@ -174,7 +169,7 @@ const GameScene = () => {
 
       grow: function () {
         const newPart = this.body.create(this.tail.x, this.tail.y, "player");
-
+        newPart.setScale(0.7);
         newPart.setOrigin(0);
       },
 
@@ -183,6 +178,8 @@ const GameScene = () => {
           this.grow();
 
           food.eat();
+
+          scoreText.setText(food.total);
 
           // if (this.speed > 20 && food.total % 5 === 0) {
           //   this.speed -= 5;
@@ -196,8 +193,8 @@ const GameScene = () => {
 
       updateGrid: function (grid) {
         this.body.children.each(function (segment) {
-          const bx = segment.x / 16;
-          const by = segment.y / 16;
+          var bx = segment.x / 16;
+          var by = segment.y / 16;
 
           grid[by][bx] = false;
         });
@@ -206,14 +203,19 @@ const GameScene = () => {
       },
     });
 
+    let scoreText = this.add.text(16, 16, 0, {
+      fontSize: "32px",
+      fill: "#fff",
+    });
+
     food = new Food(this, 3, 4);
 
-    snake = new Snake(this, 10, 10);
+    snake = new Snake(this, 8, 8);
 
     cursors = this.input.keyboard.createCursorKeys();
   }
 
-  function update(time, delta) {
+  function update(time) {
     if (!snake.alive) {
       return;
     }
@@ -229,17 +231,13 @@ const GameScene = () => {
     }
 
     if (snake.update(time)) {
-      snake.collideWithFood(food);
-    }
-
-    if (snake.update(time)) {
       if (snake.collideWithFood(food)) {
         repositionFood();
       }
     }
 
     function repositionFood() {
-      const testGrid = [];
+      let testGrid = [];
 
       for (let y = 0; y < 30; y++) {
         testGrid[y] = [];
@@ -262,7 +260,11 @@ const GameScene = () => {
       }
 
       if (validLocations.length > 0) {
-        const pos = Phaser.Math.RND.pick(validLocations);
+        const randomNumber = Math.floor(
+          Math.random() * Math.floor(validLocations.length)
+        );
+
+        const pos = validLocations[randomNumber];
 
         food.setPosition(pos.x * 16, pos.y * 16);
 
