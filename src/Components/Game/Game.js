@@ -7,6 +7,7 @@ const GameScene = ({ test }) => {
   let cursors;
   let score = 0;
   let endGameText;
+  let endGameBtnText;
   let level = 1;
   let roundTimer;
 
@@ -40,7 +41,7 @@ const GameScene = ({ test }) => {
         },
 
         eat: function () {
-          score = score + 5;
+          score = score + 6.25;
         },
       });
 
@@ -56,7 +57,41 @@ const GameScene = ({ test }) => {
 
           this.alive = true;
 
-          this.speed = level === 1 ? 100 : 50;
+          this.speed = 0;
+
+          switch (level) {
+            case 1:
+              this.speed = 100;
+              break;
+            case 2:
+              this.speed = 95;
+              break;
+            case 3:
+              this.speed = 90;
+              break;
+            case 4:
+              this.speed = 85;
+              break;
+            case 5:
+              this.speed = 80;
+              break;
+            case 6:
+              this.speed = 75;
+              break;
+            case 7:
+              this.speed = 70;
+              break;
+            case 8:
+              this.speed = 65;
+              break;
+            case 9:
+              this.speed = 60;
+              break;
+            case 10:
+              this.speed = 55;
+              break;
+            default:
+          }
 
           this.moveTime = 0;
 
@@ -173,7 +208,7 @@ const GameScene = ({ test }) => {
 
             food.eat();
 
-            scoreText.setText(`${score}/80`);
+            scoreText.setText(`${Math.round(score)}%`);
 
             return true;
           } else {
@@ -192,18 +227,19 @@ const GameScene = ({ test }) => {
         },
       });
 
-      const scoreText = this.add.text(16, 16, `0/80`, {
+      const scoreText = this.add.text(16, 16, `0%`, {
         fontSize: "32px",
         fill: "#fff",
       });
 
-      const lvlText = this.add.text(510, 16, `Lvl: ${level}`, {
+      this.add.text(450, 16, `Lvl: ${level}/10`, {
         fontSize: "32px",
         fill: "#fff",
       });
 
       roundTimer = setTimeout(() => {
         endGameText = "YOU DIE";
+        endGameBtnText = "Restart";
         this.scene.start("overMenu");
       }, 60000);
 
@@ -216,13 +252,15 @@ const GameScene = ({ test }) => {
     update(time) {
       if (!snake.alive) {
         endGameText = "YOU DIE";
+        endGameBtnText = "Restart";
         this.scene.start("overMenu");
         return;
       }
 
-      if (score === 80) {
+      if (score === 100) {
         clearTimeout(roundTimer);
         endGameText = "YOU WIN";
+        endGameBtnText = "Next level";
         level++;
         this.scene.start("overMenu");
       }
@@ -296,7 +334,7 @@ const GameScene = ({ test }) => {
         fill: "#fff",
       });
 
-      const restartText = this.add.text(190, 300, "Start Game", {
+      const startGameText = this.add.text(190, 300, "Start Game", {
         fontSize: "20px",
         fill: "#fff",
       });
@@ -308,10 +346,10 @@ const GameScene = ({ test }) => {
 
       this.add
         .zone(
-          restartText.x - restartText.width * restartText.originX - 16,
-          restartText.y - restartText.height * restartText.originY - 16,
-          restartText.width + 32,
-          restartText.height + 32
+          startGameText.x - startGameText.width * startGameText.originX - 16,
+          startGameText.y - startGameText.height * startGameText.originY - 16,
+          startGameText.width + 32,
+          startGameText.height + 32
         )
         .setOrigin(0, 0)
         .setInteractive()
@@ -332,7 +370,7 @@ const GameScene = ({ test }) => {
         fill: "#fff",
       });
 
-      const restartText = this.add.text(200, 300, "Restart", {
+      const gameOverBtnText = this.add.text(200, 300, endGameBtnText, {
         fontSize: "20px",
         fill: "#fff",
       });
@@ -344,10 +382,14 @@ const GameScene = ({ test }) => {
 
       this.add
         .zone(
-          restartText.x - restartText.width * restartText.originX - 16,
-          restartText.y - restartText.height * restartText.originY - 16,
-          restartText.width + 32,
-          restartText.height + 32
+          gameOverBtnText.x -
+            gameOverBtnText.width * gameOverBtnText.originX -
+            16,
+          gameOverBtnText.y -
+            gameOverBtnText.height * gameOverBtnText.originY -
+            16,
+          gameOverBtnText.width + 32,
+          gameOverBtnText.height + 32
         )
         .setOrigin(0, 0)
         .setInteractive()
