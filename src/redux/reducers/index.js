@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
-import scene from "./sceneReducer";
+import user from "./userReducer";
+import users from "./usersReducer";
 
 const rootReducer = combineReducers({
-  scene,
+  user,
+  users,
 });
 
 export default rootReducer;

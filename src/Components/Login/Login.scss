@@ -1,0 +1,48 @@
+.login__container {
+  width: 640px;
+  height: 480px;
+  background-color: #333;
+  margin: 0 auto;
+  position: relative;
+
+  &-title {
+    position: absolute;
+    top: 147px;
+    left: 120px;
+    font-family: 'Times New Roman', sans-serif;
+    font-weight: 300;
+    font-size: 64px;
+    color: #fff;
+  }
+
+  &-form {
+    display: block;
+    width: 100%;
+    position: absolute;
+    top: 295px;
+
+
+    &-input {
+      display: block;
+      width: 250px;
+      height: 30px;
+      border-radius: 5px;
+      text-align: center;
+      margin: 0 auto 20px;
+      padding: 0 10px;
+      outline: 0;
+      border: 0;
+    }
+
+    &-btn {
+      display: block;
+      margin: 0 auto;
+      width: 100px;
+      height: 20px;
+      background-color: #fff;
+      border: 0;
+      outline: 0;
+      border-radius: 5px;
+    }
+  }
+}

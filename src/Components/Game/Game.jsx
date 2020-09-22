@@ -1,15 +1,25 @@
 import React, { useEffect } from "react";
 import Phaser from "phaser";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../../redux/operation/userOperation";
+import { userLogout } from "../../redux/actions/userAction";
 
-const GameScene = ({ test }) => {
+const GameScene = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const user = useSelector((state) => state.user);
+
   let snake;
   let food;
   let cursors;
   let score = 0;
+  let totalScore = user.score;
   let endGameText;
   let endGameBtnText;
-  let level = 1;
   let roundTimer;
+  let level = user.level;
 
   let UP = 0;
   let DOWN = 1;
@@ -91,6 +101,7 @@ const GameScene = ({ test }) => {
               this.speed = 55;
               break;
             default:
+              this.speed = 50;
           }
 
           this.moveTime = 0;
@@ -208,7 +219,7 @@ const GameScene = ({ test }) => {
 
             food.eat();
 
-            scoreText.setText(`${Math.round(score)}%`);
+            scoreText.setText(`Score: ${totalScore + Math.round(score)}`);
 
             return true;
           } else {
@@ -227,12 +238,12 @@ const GameScene = ({ test }) => {
         },
       });
 
-      const scoreText = this.add.text(16, 16, `0%`, {
+      const scoreText = this.add.text(16, 16, `Score: ${totalScore}`, {
         fontSize: "32px",
         fill: "#fff",
       });
 
-      this.add.text(450, 16, `Lvl: ${level}/10`, {
+      this.add.text(450, 16, `${user.name}`, {
         fontSize: "32px",
         fill: "#fff",
       });
@@ -261,7 +272,13 @@ const GameScene = ({ test }) => {
         clearTimeout(roundTimer);
         endGameText = "YOU WIN";
         endGameBtnText = "Next level";
+
+        dispatch(
+          updateUser({ ...user, level: level + 1, score: score + totalScore })
+        );
         level++;
+        totalScore = totalScore + score;
+
         this.scene.start("overMenu");
       }
 
@@ -329,7 +346,8 @@ const GameScene = ({ test }) => {
     preload() {}
 
     create() {
-      const gameOverText = this.add.text(120, 150, "SNAKE GAME", {
+      this.add.text(120, 150, "SNAKE GAME", {
+        fontFamily: "Times New Roman",
         fontSize: "64px",
         fill: "#fff",
       });
@@ -339,8 +357,13 @@ const GameScene = ({ test }) => {
         fill: "#fff",
       });
 
-      const scoreBoardText = this.add.text(350, 300, "Rating", {
+      const scoreBoardText = this.add.text(350, 300, "Top Scores", {
         fontSize: "20px",
+        fill: "#fff",
+      });
+
+      const logOutText = this.add.text(295, 430, "Logout", {
+        fontSize: "16px",
         fill: "#fff",
       });
 
@@ -354,6 +377,30 @@ const GameScene = ({ test }) => {
         .setOrigin(0, 0)
         .setInteractive()
         .once("pointerup", () => this.scene.start("gameArea"));
+
+      this.add
+        .zone(
+          scoreBoardText.x - scoreBoardText.width * scoreBoardText.originX - 16,
+          scoreBoardText.y -
+            scoreBoardText.height * scoreBoardText.originY -
+            16,
+          scoreBoardText.width + 32,
+          scoreBoardText.height + 32
+        )
+        .setOrigin(0, 0)
+        .setInteractive()
+        .once("pointerup", () => history.push("/stats"));
+
+      this.add
+        .zone(
+          logOutText.x - logOutText.width * logOutText.originX - 16,
+          logOutText.y - logOutText.height * logOutText.originY - 16,
+          logOutText.width + 32,
+          logOutText.height + 32
+        )
+        .setOrigin(0, 0)
+        .setInteractive()
+        .once("pointerup", () => dispatch(userLogout()));
     }
   }
 
@@ -365,7 +412,7 @@ const GameScene = ({ test }) => {
     preload() {}
 
     create() {
-      const gameOverText = this.add.text(180, 150, endGameText, {
+      this.add.text(180, 150, endGameText, {
         fontSize: "64px",
         fill: "#fff",
       });
@@ -375,7 +422,7 @@ const GameScene = ({ test }) => {
         fill: "#fff",
       });
 
-      const scoreBoardText = this.add.text(350, 300, "Rating", {
+      const scoreBoardText = this.add.text(350, 300, "Top Scores", {
         fontSize: "20px",
         fill: "#fff",
       });
@@ -394,11 +441,25 @@ const GameScene = ({ test }) => {
         .setOrigin(0, 0)
         .setInteractive()
         .once("pointerup", () => this.scene.start("gameArea"), (score = 0));
+
+      this.add
+        .zone(
+          scoreBoardText.x - scoreBoardText.width * scoreBoardText.originX - 16,
+          scoreBoardText.y -
+            scoreBoardText.height * scoreBoardText.originY -
+            16,
+          scoreBoardText.width + 32,
+          scoreBoardText.height + 32
+        )
+        .setOrigin(0, 0)
+        .setInteractive()
+        .once("pointerup", () => history.push("/stats"));
     }
   }
 
   const config = {
     type: Phaser.AUTO,
+    parent: "gameWindow",
     width: 640,
     height: 480,
     backgroundColor: "#333",
@@ -408,9 +469,13 @@ const GameScene = ({ test }) => {
 
   useEffect(() => {
     new Phaser.Game(config);
-  }, [test]);
+    return () => {
+      const gameWindow = document.querySelector("canvas");
+      gameWindow.remove();
+    };
+  }, []);
 
-  return <div></div>;
+  return <div id="gameWindow"></div>;
 };
 
 export default GameScene;

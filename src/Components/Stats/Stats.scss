@@ -1,0 +1,46 @@
+.stats__container {
+  display: block;
+  width: 640px;
+  height: 480px;
+  background-color: #333;
+  margin: 0 auto;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  &-title {
+    position: absolute;
+    top: 147px;
+    left: 140px;
+    font-family: 'Times New Roman', sans-serif;
+    font-weight: 300;
+    font-size: 64px;
+    color: #fff;
+  }
+
+  &-table {
+    position: absolute;
+    top: 240px;
+    left: 200px;
+
+    &-head {
+      color: #fff;
+    }
+
+    &-body {
+      color: #fff;
+    }
+  }
+
+  &-btn {
+    position: absolute;
+    top: 430px;
+    left: 300px;
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    color: #fff;
+    font-size: 14px;
+  }
+}
