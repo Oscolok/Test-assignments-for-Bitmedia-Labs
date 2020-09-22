@@ -5,7 +5,6 @@ import Game from "./Components/Game/Game";
 import Login from "./Components/Login/Login";
 import Stats from "./Components/Stats/Stats";
 import { getUsers } from "./redux/operation/userOperation";
-import "./App.scss";
 
 const App = () => {
   const history = useHistory();
@@ -23,16 +22,14 @@ const App = () => {
   });
 
   return (
-    <div className="main">
-      <Switch>
-        <Route exact path="/login" component={Login} />
+    <Switch>
+      <Route exact path="/login" component={Login} />
 
-        <Route exact path="/" component={Game} />
-        <Route exact path="/stats" component={Stats} />
+      <Route exact path="/" component={Game} />
+      <Route exact path="/stats" component={Stats} />
 
-        <Redirect to="/" />
-      </Switch>
-    </div>
+      <Redirect to="/" />
+    </Switch>
   );
 };
 

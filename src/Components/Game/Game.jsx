@@ -460,10 +460,11 @@ const GameScene = () => {
   const config = {
     type: Phaser.AUTO,
     parent: "gameWindow",
+
     width: 640,
     height: 480,
     backgroundColor: "#333",
-    canvasStyle: "display: block; margin: 0 auto;",
+    canvasStyle: "display: block; margin: 0 auto; outline: 1px solid #fff;",
     scene: [startScene, gameScene, overScene],
   };
 
