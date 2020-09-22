@@ -163,7 +163,7 @@ const GameScene = () => {
             case UP:
               this.headPosition.y = Phaser.Math.Wrap(
                 this.headPosition.y - 1,
-                0,
+                4,
                 30
               );
               break;
@@ -171,7 +171,7 @@ const GameScene = () => {
             case DOWN:
               this.headPosition.y = Phaser.Math.Wrap(
                 this.headPosition.y + 1,
-                0,
+                4,
                 30
               );
               break;
@@ -238,7 +238,7 @@ const GameScene = () => {
         },
       });
 
-      const scoreText = this.add.text(16, 16, `Score: ${totalScore}`, {
+      const scoreText = this.add.text(64, 16, `Score: ${totalScore}`, {
         fontSize: "32px",
         fill: "#fff",
       });
@@ -313,7 +313,7 @@ const GameScene = () => {
 
         let validLocations = [];
 
-        for (let y = 0; y < 30; y++) {
+        for (let y = 4; y < 30; y++) {
           for (let x = 0; x < 40; x++) {
             if (testGrid[y][x] === true) {
               validLocations.push({ x: x, y: y });
